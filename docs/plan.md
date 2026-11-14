@@ -65,4 +65,20 @@ If there is no clean result by Tuesday 22:00, the LMU application goes out on We
 
 ## Test videos (filled in once, after notebook 01)
 
-...
+Chosen by the rule above in the first complete run of notebook 01 (14 November 2026): video25, video48, video55 (800 frames). Model B's validation videos: video20, video26, video35 (720 frames).
+
+## Follow-up after the validation run (written on 14 November 2026, before notebook 04 was run)
+
+What notebooks 02 and 03 showed on the validation frames:
+
+- Model A, validated on random frames from its own training videos: mean Dice 0.952 (best epoch 15). Model B, validated on 3 other videos: 0.798 (best epoch 6). The same kind of model, trained the same way, looks 0.15 better when the validation frames come from the training videos. This is not yet H2: H2 compares model A's validation score with its score on the test videos.
+- The largest gap is the L-hook: Dice 0.97 for model A on random frames, 0.39 for model B on new videos, where it is taken for liver (31 % of its pixels) and grasper (21 %).
+- Model B's validation videos contain none of the small classes (blood, cystic duct, hepatic vein, liver ligament), so H1 could not be looked at.
+- Warning signal on model B's validation frames: the planned measure (entropy over the predicted foreground) catches 19 of the 72 worst frames (7.2 expected by chance, p = 2e-5); the whole-image entropy catches 28 of 72 (p = 2e-12). Neither reaches the bar of half (36). All 72 worst frames are from one video (video35).
+
+Fixed now, before the test:
+
+- H1, H2 and H3 stay as they are.
+- **H3b.** The whole-image mean entropy, with the same rule as H3: it holds if the 10 % of test frames with the highest value contain at least half of the 10 % of frames with the lowest frame Dice. p-value and rank correlation are reported. It is the second measure, chosen after the validation run, so it is reported as such, whether it holds or not.
+- If none of the small classes occurs in the test videos, H1 cannot be tested; it is reported that way, not as "does not hold".
+- Not planned, reported as such: the frame Dice counts every class that the model predicts but that is not in the truth as 0, even a few pixels. In the worst validation frames the main structures were found and small regions of other classes were added. Notebook 04 therefore also reports a frame Dice over the classes in the truth only and the number of invented classes per frame.
