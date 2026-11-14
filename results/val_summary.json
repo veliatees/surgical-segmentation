@@ -1,0 +1,30 @@
+{
+ "val_mean_dice_A": 0.9516611863670691,
+ "val_mean_dice_B": 0.7983003132951898,
+ "logged": {
+  "A": 0.9516611863670692,
+  "B": 0.7983003132951898
+ },
+ "frames_A": 1092,
+ "frames_B": 720,
+ "warning_B_val": [
+  {
+   "measure": "entropy_fg",
+   "frames": 720,
+   "k": 72,
+   "caught": 19,
+   "expected_by_chance": 7.2,
+   "p_value": 1.870779969687201e-05,
+   "spearman": -0.3885210362417108
+  },
+  {
+   "measure": "entropy_all",
+   "frames": 720,
+   "k": 72,
+   "caught": 28,
+   "expected_by_chance": 7.2,
+   "p_value": 1.6559970964953025e-12,
+   "spearman": -0.66813525874857
+  }
+ ]
+}

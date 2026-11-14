@@ -1,0 +1,39 @@
+{
+ "large": [
+  1,
+  2,
+  4,
+  10
+ ],
+ "small": [
+  7,
+  8,
+  11,
+  12
+ ],
+ "names": [
+  "black background",
+  "abdominal wall",
+  "liver",
+  "gastrointestinal tract",
+  "fat",
+  "grasper",
+  "connective tissue",
+  "blood",
+  "cystic duct",
+  "L-hook electrocautery",
+  "gallbladder",
+  "hepatic vein",
+  "liver ligament"
+ ],
+ "test_videos": [
+  "video25",
+  "video48",
+  "video55"
+ ],
+ "val_videos_B": [
+  "video20",
+  "video26",
+  "video35"
+ ]
+}
