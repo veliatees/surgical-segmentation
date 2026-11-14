@@ -83,12 +83,28 @@ def wait(step, kernel_id):
         status = (m.group(1) if m else out.strip()).lower()
         print(f"[{step}] {datetime.now():%H:%M:%S}  {status}")
         if "complete" in status:
-            return
+            return True
         if "error" in status or "cancel" in status:
-            sys.exit(f"[{step}] stopped with status {status}; log: https://www.kaggle.com/code/{kernel_id}")
+            print(f"[{step}] stopped with status {status}; log: https://www.kaggle.com/code/{kernel_id}")
+            return False
         if time.time() - start > MAX_HOURS * 3600:
             sys.exit(f"[{step}] still running after {MAX_HOURS} h; check https://www.kaggle.com/code/{kernel_id}")
         time.sleep(POLL_SECONDS)
+
+
+def show_log(target, n=40):
+    """Print the end of the Kaggle log, without the debugger noise, so the error is visible here."""
+    noise = ("frozen_modules", "frozen modules", "Debugger warning", "PYDEVD", "Debugging will proceed",
+             "NbConvertApp", "SyntaxWarning", "re.sub(")
+    for log in sorted(target.glob("*.log")):
+        raw = log.read_text()
+        try:
+            text = "".join(e.get("data", "") for e in json.loads(raw))
+        except ValueError:
+            text = raw
+        lines = [l for l in text.splitlines() if l.strip() and not any(x in l for x in noise)]
+        print(f"===== end of {log.name}")
+        print("\n".join(lines[-n:]))
 
 
 def main():
@@ -101,10 +117,13 @@ def main():
     for step in steps:
         kernel_id = push(user, step)
         time.sleep(10)
-        wait(step, kernel_id)
+        ok = wait(step, kernel_id)
         target = run_dir / step
         target.mkdir(parents=True, exist_ok=True)
         kaggle("kernels", "output", kernel_id, "-p", str(target))
+        if not ok:
+            show_log(target)
+            sys.exit(f"[{step}] failed; output and log are in {target}")
         print(f"[{step}] output in {target}")
     print()
     for name in SHOW:
